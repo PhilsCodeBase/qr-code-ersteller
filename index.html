@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>QR-Code Studio</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <h1>QR-Code Studio</h1>
+  <p>Gestalte QR-Codes mit eigenen Farben, Formen und Logo. Alles läuft lokal in deinem Browser, nichts wird hochgeladen.</p>
+</header>
+
+<main class="layout">
+  <form id="f" class="panel" autocomplete="off">
+
+    <fieldset class="card">
+      <legend>1 · Inhalt</legend>
+      <div class="seg" role="radiogroup" aria-label="Art des Inhalts">
+        <label><input type="radio" name="type" value="text" checked><span>Text / URL</span></label>
+        <label><input type="radio" name="type" value="wifi"><span>WLAN</span></label>
+        <label><input type="radio" name="type" value="mail"><span>E-Mail</span></label>
+        <label><input type="radio" name="type" value="tel"><span>Telefon</span></label>
+        <label><input type="radio" name="type" value="vcard"><span>Kontakt</span></label>
+      </div>
+
+      <div class="fields" data-for="text">
+        <label>Text oder Link<textarea name="text" rows="3" maxlength="1500">https://example.com</textarea></label>
+      </div>
+      <div class="fields" data-for="wifi" hidden>
+        <label>Netzwerkname (SSID)<input name="ssid" maxlength="32"></label>
+        <label>Passwort<input name="wpass" maxlength="63" type="text" spellcheck="false"></label>
+        <label>Verschlüsselung
+          <select name="wenc"><option value="WPA">WPA/WPA2/WPA3</option><option value="WEP">WEP</option><option value="nopass">Keine</option></select>
+        </label>
+        <label class="check"><input type="checkbox" name="whidden"> Verstecktes Netzwerk</label>
+      </div>
+      <div class="fields" data-for="mail" hidden>
+        <label>E-Mail-Adresse<input name="maddr" type="email" maxlength="200"></label>
+        <label>Betreff<input name="msubj" maxlength="200"></label>
+        <label>Nachricht<textarea name="mbody" rows="3" maxlength="800"></textarea></label>
+      </div>
+      <div class="fields" data-for="tel" hidden>
+        <label>Telefonnummer<input name="tel" type="tel" maxlength="30" placeholder="+49 170 1234567"></label>
+      </div>
+      <div class="fields" data-for="vcard" hidden>
+        <div class="row2">
+          <label>Vorname<input name="vfirst" maxlength="60"></label>
+          <label>Nachname<input name="vlast" maxlength="60"></label>
+        </div>
+        <label>Firma<input name="vorg" maxlength="100"></label>
+        <label>Telefon<input name="vtel" type="tel" maxlength="30"></label>
+        <label>E-Mail<input name="vmail" type="email" maxlength="200"></label>
+        <label>Webseite<input name="vurl" maxlength="200"></label>
+      </div>
+    </fieldset>
+
+    <fieldset class="card">
+      <legend>2 · Stil</legend>
+      <div class="presets" role="group" aria-label="Vorlagen">
+        <button type="button" data-preset="classic">Klassisch</button>
+        <button type="button" data-preset="ocean">Ozean</button>
+        <button type="button" data-preset="sunset">Sonnenuntergang</button>
+        <button type="button" data-preset="forest">Wald</button>
+        <button type="button" data-preset="soft">Weich</button>
+      </div>
+
+      <p class="lbl">Muster</p>
+      <div class="seg" role="radiogroup" aria-label="Form der Module">
+        <label><input type="radio" name="shape" value="square" checked><span>■ Quadrat</span></label>
+        <label><input type="radio" name="shape" value="rounded"><span>▢ Rund</span></label>
+        <label><input type="radio" name="shape" value="dots"><span>● Punkte</span></label>
+        <label><input type="radio" name="shape" value="small"><span>▪ Klein</span></label>
+        <label><input type="radio" name="shape" value="diamond"><span>◆ Raute</span></label>
+      </div>
+
+      <p class="lbl">Eck-Rahmen</p>
+      <div class="seg" role="radiogroup" aria-label="Form der Eck-Rahmen">
+        <label><input type="radio" name="eyeFrameShape" value="square" checked><span>Eckig</span></label>
+        <label><input type="radio" name="eyeFrameShape" value="rounded"><span>Abgerundet</span></label>
+        <label><input type="radio" name="eyeFrameShape" value="circle"><span>Kreis</span></label>
+      </div>
+
+      <p class="lbl">Eck-Punkt</p>
+      <div class="seg" role="radiogroup" aria-label="Form der Eck-Punkte">
+        <label><input type="radio" name="eyeBallShape" value="square" checked><span>Eckig</span></label>
+        <label><input type="radio" name="eyeBallShape" value="rounded"><span>Abgerundet</span></label>
+        <label><input type="radio" name="eyeBallShape" value="circle"><span>Kreis</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset class="card">
+      <legend>3 · Farben</legend>
+      <div class="row2">
+        <label>Codefarbe<input type="color" name="fg1" value="#111827"></label>
+        <label>Hintergrund<input type="color" name="bg" value="#ffffff"></label>
+      </div>
+      <label class="check"><input type="checkbox" name="bgTransparent"> Transparenter Hintergrund</label>
+      <label class="check"><input type="checkbox" name="gradient"> Farbverlauf</label>
+      <div class="fields" data-for="gradient" hidden>
+        <div class="row2">
+          <label>Zweite Farbe<input type="color" name="fg2" value="#2563eb"></label>
+          <label>Richtung
+            <select name="gradAngle"><option value="d">Diagonal</option><option value="h">Waagerecht</option><option value="v">Senkrecht</option></select>
+          </label>
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" name="eyesCustom"> Eck-Muster in eigener Farbe</label>
+      <div class="fields" data-for="eyesCustom" hidden>
+        <div class="row2">
+          <label>Rahmen<input type="color" name="eyeFrame" value="#111827"></label>
+          <label>Punkt<input type="color" name="eyeBall" value="#2563eb"></label>
+        </div>
+      </div>
+      <label>Abgerundeter Hintergrund <output data-out="bgRadius">0 %</output>
+        <input type="range" name="bgRadius" min="0" max="25" value="0">
+      </label>
+      <label>Ruhezone (Rand) <output data-out="margin">4</output>
+        <input type="range" name="margin" min="0" max="8" value="4">
+      </label>
+    </fieldset>
+
+    <fieldset class="card">
+      <legend>4 · Logo</legend>
+      <label class="drop" id="drop">
+        <input type="file" id="logoFile" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml">
+        <span id="dropText">Logo auswählen oder hierher ziehen<small>PNG, JPG, WebP, GIF oder SVG · max. 5 MB</small></span>
+      </label>
+      <div id="logoControls" hidden>
+        <div class="seg" role="radiogroup" aria-label="Form des Logos">
+          <label><input type="radio" name="logoShape" value="orig" checked><span>Original</span></label>
+          <label><input type="radio" name="logoShape" value="rounded"><span>Abgerundet</span></label>
+          <label><input type="radio" name="logoShape" value="round"><span>Rund</span></label>
+        </div>
+        <label>Größe <output data-out="logoScale">22 %</output>
+          <input type="range" name="logoScale" min="10" max="35" value="22">
+        </label>
+        <label>Freiraum um das Logo <output data-out="logoPad">1</output>
+          <input type="range" name="logoPad" min="0" max="4" step="0.5" value="1">
+        </label>
+        <button type="button" id="logoRemove" class="ghost">Logo entfernen</button>
+      </div>
+    </fieldset>
+
+    <fieldset class="card">
+      <legend>5 · Fehlerkorrektur</legend>
+      <label>Stufe
+        <select name="ecc">
+          <option value="L">L · 7 %, kleinster Code</option>
+          <option value="M">M · 15 %</option>
+          <option value="Q">Q · 25 %</option>
+          <option value="H" selected>H · 30 %, ideal mit Logo</option>
+        </select>
+      </label>
+    </fieldset>
+  </form>
+
+  <aside class="preview" aria-label="Vorschau">
+    <div class="stage" id="stage">
+      <img id="preview" alt="Vorschau des QR-Codes" width="480" height="480">
+      <p id="empty" class="empty" hidden>Gib einen Inhalt ein, um den QR-Code zu sehen.</p>
+    </div>
+    <div id="msgs" class="msgs" role="status" aria-live="polite"></div>
+    <p id="info" class="info"></p>
+    <div class="export">
+      <label>Größe
+        <select id="px"><option value="512">512 px</option><option value="1024" selected>1024 px</option><option value="2048">2048 px</option><option value="4096">4096 px</option></select>
+      </label>
+      <button type="button" id="dlPng" class="primary">PNG laden</button>
+      <button type="button" id="dlSvg">SVG laden</button>
+    </div>
+    <p class="hint">Teste den Code vor dem Druck immer mit mehreren Handys.</p>
+  </aside>
+</main>
+
+<script src="qr.js"></script>
+<script src="render.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
