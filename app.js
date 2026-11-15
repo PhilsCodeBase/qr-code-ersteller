@@ -13,7 +13,8 @@
   const dropText = document.getElementById("dropText");
   const drop = document.getElementById("drop");
 
-  let logo = null; // { dataUrl (png), w, h }
+  const EMPTY_TEXT = "Gib einen Inhalt ein, um den QR-Code zu sehen.";
+  let logo = null; //{ dataUrl (png), w, h }
   let current = null; // { svg }
   let previewUrl = null;
 
@@ -122,7 +123,7 @@
     const text = payload();
     current = null;
     if (!text) {
-      preview.hidden = true; empty.hidden = false; info.textContent = "";
+      preview.hidden = true; empty.hidden = false; empty.textContent = EMPTY_TEXT; info.textContent = "";
       dlPng.disabled = dlSvg.disabled = true;
       return;
     }
@@ -132,7 +133,7 @@
     try {
       qr = QR.encode(text, level, logo ? 5 : 1);
     } catch (e) {
-      preview.hidden = true; empty.hidden = false; empty.textContent = "";
+      preview.hidden = true; empty.hidden = false; empty.textContent = EMPTY_TEXT;
       dlPng.disabled = dlSvg.disabled = true; info.textContent = "";
       msg(e instanceof RangeError ? e.message : "QR-Code konnte nicht erzeugt werden.", true);
       return;
@@ -217,6 +218,7 @@
       const img = new Image();
       await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
       let w = img.naturalWidth || 512, h = img.naturalHeight || 512;
+      if (w * h > 40e6) throw new Error("zu groß"); // Schutz vor Riesenbildern (Speicher)
       const k = Math.min(1, 768 / Math.max(w, h));
       w = Math.max(1, Math.round(w * k)); h = Math.max(1, Math.round(h * k));
       const c = document.createElement("canvas");
@@ -261,7 +263,9 @@
     render();
   }));
 
-  form.addEventListener("input", schedule);
-  form.addEventListener("change", schedule);
+  // Das Datei-Feld rendert selbst (loadLogo), sonst würde die Fehlermeldung sofort gelöscht.
+  const onForm = (e) => { if (e.target !== logoFile) schedule(); };
+  form.addEventListener("input", onForm);
+  form.addEventListener("change", onForm);
   render();
 })();
